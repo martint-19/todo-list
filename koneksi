@@ -1,0 +1,20 @@
+<?php
+// Membuka koneksi ke database
+$connection = mysqli_connect('localhost', 'username', 'password', 'todo_list_db');
+
+// Mengecek koneksi
+if (!$connection) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+
+// Menjalankan query SELECT
+$result = mysqli_query($connection, "SELECT * FROM tasks");
+
+// Mengambil hasil query
+while ($row = mysqli_fetch_assoc($result)) {
+    echo "ID: " . $row['id'] . " - Title: " . $row['title'] . "<br>";
+}
+
+// Menutup koneksi
+mysqli_close($connection);
+?>
