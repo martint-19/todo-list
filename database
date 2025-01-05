@@ -1,0 +1,14 @@
+-- Membuat database
+CREATE DATABASE todo_list_db;
+
+-- Menggunakan database yang baru dibuat
+USE todo_list_db;
+
+-- Membuat tabel untuk menyimpan data tugas
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    status ENUM('pending', 'completed') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
