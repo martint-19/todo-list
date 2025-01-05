@@ -1,0 +1,54 @@
+<?php
+header("Content-Type: application/json");
+
+$connection = mysqli_connect('localhost', 'username', 'password', 'todo_list_db');
+
+if (!$connection) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+switch ($method) {
+    case 'GET':
+        $result = mysqli_query($connection, "SELECT * FROM tasks");
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode($tasks);
+        break;
+
+    case 'POST':
+        $data = json_decode(file_get_contents("php://input"), true);
+        $title = $data['title'];
+        $description = $data['description'];
+        $status = $data['status'];
+        $query = "INSERT INTO tasks (title, description, status) VALUES ('$title', '$description', '$status')";
+        mysqli_query($connection, $query);
+        echo json_encode(["message" => "Task created successfully"]);
+        break;
+
+    case 'PUT':
+        $data = json_decode(file_get_contents("php://input"), true);
+        $id = $data['id'];
+        $title = $data['title'];
+        $description = $data['description'];
+        $status = $data['status'];
+        $query = "UPDATE tasks SET title='$title', description='$description', status='$status' WHERE id=$id";
+        mysqli_query($connection, $query);
+        echo json_encode(["message" => "Task updated successfully"]);
+        break;
+
+    case 'DELETE':
+        $data = json_decode(file_get_contents("php://input"), true);
+        $id = $data['id'];
+        $query = "DELETE FROM tasks WHERE id=$id";
+        mysqli_query($connection, $query);
+        echo json_encode(["message" => "Task deleted successfully"]);
+        break;
+
+    default:
+        echo json_encode(["message" => "Method not supported"]);
+        break;
+}
+
+mysqli_close($connection);
+?>
